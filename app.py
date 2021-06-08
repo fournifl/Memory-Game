@@ -1,9 +1,13 @@
 import pygame
 import game_config as gc
+import pdb
+import time
+import os
 
 from pygame import display, event, image
 from time import sleep
 from animal import Animal
+
 
 def find_index_from_xy(x, y):
     row = y // gc.IMAGE_SIZE
@@ -12,12 +16,14 @@ def find_index_from_xy(x, y):
     return row, col, index
 
 pygame.init()
+pygame.mixer.init()
 display.set_caption('My Game')
 screen = display.set_mode((gc.SCREEN_SIZE, gc.SCREEN_SIZE))
 matched = image.load('other_assets/matched.png')
 running = True
 tiles = [Animal(i) for i in range(0, gc.NUM_TILES_TOTAL)]
 current_images_displayed = []
+compteur = 0
 
 while running:
     current_events = event.get()
@@ -31,13 +37,21 @@ while running:
                 running = False
 
         if e.type == pygame.MOUSEBUTTONDOWN:
-            mouse_x, mouse_y = pygame.mouse.get_pos()
-            row, col, index = find_index_from_xy(mouse_x, mouse_y)
-            if index not in current_images_displayed:
-                if len(current_images_displayed) > 1:
-                    current_images_displayed = current_images_displayed[1:] + [index]
-                else:
-                    current_images_displayed.append(index)
+            pygame.mixer.stop()
+            if len(current_images_displayed) == 2:
+                current_images_displayed = []
+            else:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                row, col, index = find_index_from_xy(mouse_x, mouse_y)
+                if index not in current_images_displayed:
+                    if len(current_images_displayed) > 1:
+                        current_images_displayed = current_images_displayed[1:] + [index]
+                    else:
+                        current_images_displayed.append(index)
+                tic = time.time()
+                sound = pygame.mixer.Sound(tiles[index].sound_path)
+                pygame.mixer.Sound.play(sound)
+                compteur += 1
 
     # Display animals
     screen.fill((255, 255, 255))
@@ -48,6 +62,7 @@ while running:
         current_image = tile.image if i in current_images_displayed else tile.box
         if not tile.skip:
             screen.blit(current_image, (tile.col * gc.IMAGE_SIZE + gc.MARGIN, tile.row * gc.IMAGE_SIZE + gc.MARGIN))
+            _, current_sound = os.path.split(tile.sound_path)
         else:
             total_skipped += 1
 
@@ -68,5 +83,9 @@ while running:
 
     if total_skipped == len(tiles):
         running = False
+    
+
+    
 
 print('Goodbye!')
+print('Bravo, partie finie en %s coups !' % compteur/2)
