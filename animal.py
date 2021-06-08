@@ -14,6 +14,7 @@ class Animal:
         self.index = index
         self.name = random.choice(available_animals())
         self.image_path = os.path.join(gc.ASSET_DIR, self.name)
+        self.sound_path = os.path.join(gc.SOUND_DIR, self.name.replace('.jpeg', '.wav'))
         self.row = index // gc.NUM_TILES_SIDE
         self.col = index % gc.NUM_TILES_SIDE
         self.skip = False
