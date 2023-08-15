@@ -48,10 +48,11 @@ while running:
                         current_images_displayed = current_images_displayed[1:] + [index]
                     else:
                         current_images_displayed.append(index)
+                compteur += 1
                 tic = time.time()
                 sound = pygame.mixer.Sound(tiles[index].sound_path)
                 pygame.mixer.Sound.play(sound)
-                compteur += 1
+
 
     # Display animals
     screen.fill((255, 255, 255))
@@ -88,4 +89,4 @@ while running:
     
 
 print('Goodbye!')
-print('Bravo, partie finie en %s coups !' % compteur/2)
+print('Bravo, partie finie en %i coups !' % int(compteur/2))
