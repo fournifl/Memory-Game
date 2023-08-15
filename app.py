@@ -2,6 +2,7 @@ import pygame
 import game_config as gc
 import pdb
 import time
+import matplotlib.pyplot as plt
 import os
 
 from pygame import display, event, image
@@ -10,18 +11,20 @@ from animal import Animal
 
 
 def find_index_from_xy(x, y):
+
     row = y // gc.IMAGE_SIZE
     col = x // gc.IMAGE_SIZE
-    index = row * gc.NUM_TILES_SIDE + col
+    index = row * gc.NUM_TILES_WIDTH + col
     return row, col, index
 
 pygame.init()
 pygame.mixer.init()
 display.set_caption('My Game')
-screen = display.set_mode((gc.SCREEN_SIZE, gc.SCREEN_SIZE))
+screen = display.set_mode((gc.SCREEN_SIZE_WIDTH, gc.SCREEN_SIZE_HEIGHT))
 matched = image.load('other_assets/matched.png')
 running = True
 tiles = [Animal(i) for i in range(0, gc.NUM_TILES_TOTAL)]
+
 current_images_displayed = []
 compteur = 0
 
